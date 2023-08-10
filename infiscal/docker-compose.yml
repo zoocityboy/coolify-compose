@@ -22,6 +22,8 @@ services:
     depends_on:
       - mongo
     image: infisical/backend
+    ports:
+      - 9020:4000
     env_file: .env
     environment:
       - NODE_ENV=production
@@ -34,6 +36,8 @@ services:
     depends_on:
       - backend
     image: infisical/frontend
+    ports:
+      - 9021:3000    
     env_file: .env
     environment:
       # - NEXT_PUBLIC_POSTHOG_API_KEY=${POSTHOG_PROJECT_API_KEY}
