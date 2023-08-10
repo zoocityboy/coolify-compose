@@ -19,8 +19,8 @@ services:
   backend:
     container_name: infisical-backend
     restart: unless-stopped
-    depends_on:
-      - mongo
+    # depends_on:
+    #   - mongo
     image: infisical/backend
     ports:
       - 9020:4000
@@ -59,22 +59,22 @@ services:
   #   networks:
   #     - infisical
 
-  mongo:
-    container_name: infisical-mongo
-    image: mongo
-    restart: always
-    env_file: .env
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - infisical
+  # mongo:
+  #   container_name: infisical-mongo
+  #   image: mongo
+  #   restart: always
+  #   env_file: .env
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+  #     - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+  #   volumes:
+  #     - mongo-data:/data/db
+  #   networks:
+  #     - infisical
 
-volumes:
-  mongo-data:
-    driver: local
+# volumes:
+#   mongo-data:
+#     driver: local
 
 networks:
   infisical:
