@@ -4,6 +4,8 @@ services:
     image: electerious/ackee
     container_name: ackee
     restart: always
+    environment:
+      - WAIT_HOSTS=mongo:27017
     ports:
       - "9041:3000"
    depends_on:
