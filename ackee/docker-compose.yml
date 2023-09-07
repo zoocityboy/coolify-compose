@@ -5,7 +5,7 @@ services:
     container_name: ackee
     restart: always
     ports:
-      - "3008:3000"
+      - "9041:3000"
   # mongo:
   #   image: mongo
   #   container_name: mongo
