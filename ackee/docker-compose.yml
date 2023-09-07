@@ -6,14 +6,6 @@ services:
     restart: always
     ports:
       - "3008:3000"
-    environment:
-      # - WAIT_HOSTS=mongo:27017
-      # - ACKEE_MONGODB=mongodb://mongo:27017/ackee
-      - ACKEE_MONGODB=mongodb://clhd3yxlx049e9so6afe1aqtj:oZHM9qVYu0WZiLNyYB3cVit3@130.61.127.158:9000/ackee?readPreference=primary&ssl=false
-      - ACKEE_USERNAME=zoocityboy@gmail.com
-      - ACKEE_PASSWORD=password1
-    depends_on:
-      - mongo
   # mongo:
   #   image: mongo
   #   container_name: mongo
