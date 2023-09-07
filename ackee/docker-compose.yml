@@ -6,9 +6,11 @@ services:
     restart: always
     ports:
       - "9041:3000"
-  # mongo:
-  #   image: mongo
-  #   container_name: mongo
-  #   restart: always
-  #   volumes:
-  #     - ./data:/data/db
+   depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    volumes:
+      - ./data:/data/db
