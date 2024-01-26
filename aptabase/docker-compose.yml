@@ -1,0 +1,61 @@
+version: "3.2"
+services:
+  aptabase_db:
+    container_name: aptabase_db
+    image: postgres:15-alpine
+    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    networks:
+      - aptabase
+
+  aptabase_events_db:
+    container_name: aptabase_events_db
+    image: clickhouse/clickhouse-server:23.8.4.69-alpine
+    restart: always
+    volumes:
+      - events-db-data:/var/lib/clickhouse
+    environment:
+      - CLICKHOUSE_USER
+      - CLICKHOUSE_PASSWORD
+    ulimits:
+     nofile:
+       soft: 262144
+       hard: 262144
+    networks:
+      - aptabase
+
+  aptabase:
+    container_name: aptabase_app
+    image: ghcr.io/aptabase/aptabase:main
+    restart: always
+    depends_on:
+      - aptabase_events_db
+      - aptabase_db
+    environment:
+      - BASE_URL
+      - AUTH_SECRET
+      - DATABASE_URL
+      - CLICKHOUSE_URL
+      - SMTP_HOST
+      - SMTP_PORT
+      - SMTP_USERNAME
+      - SMTP_PASSWORD
+      - SMTP_FROM_ADDRESS
+    networks:
+      - aptabase
+      - proxy
+
+volumes:
+  db-data:
+    driver: local
+  events-db-data:
+    driver: local
+
+networks:
+  aptabase:
+  proxy:
+    external: true
