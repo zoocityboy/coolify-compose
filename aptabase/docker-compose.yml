@@ -34,7 +34,7 @@ services:
       - aptabase_events_db
       - aptabase_db
     ports:
-      - 8000:80
+      - 9073:80
     env_file:
       - .env
     # environment:
