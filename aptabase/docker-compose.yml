@@ -2,31 +2,29 @@ version: "3.2"
 services:
   aptabase_db:
     container_name: aptabase_db
-    image: postgres:15-alpine
+    image: docker.io/postgres:15-alpine
     restart: always
     volumes:
       - db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-    networks:
-      - aptabase
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
 
   aptabase_events_db:
     container_name: aptabase_events_db
-    image: clickhouse/clickhouse-server:23.8.4.69-alpine
+    image: docker.io/clickhouse/clickhouse-server:23.8.4.69-alpine
     restart: always
     volumes:
       - events-db-data:/var/lib/clickhouse
-    environment:
-      - CLICKHOUSE_USER
-      - CLICKHOUSE_PASSWORD
+    ports:
+      - 8123:8123
+    env_file:
+      - .env
     ulimits:
-     nofile:
-       soft: 262144
-       hard: 262144
-    networks:
-      - aptabase
+      nofile:
+        soft: 262144
+        hard: 262144
 
   aptabase:
     container_name: aptabase_app
@@ -35,27 +33,19 @@ services:
     depends_on:
       - aptabase_events_db
       - aptabase_db
-    environment:
-      - BASE_URL
-      - AUTH_SECRET
-      - DATABASE_URL
-      - CLICKHOUSE_URL
-      - SMTP_HOST
-      - SMTP_PORT
-      - SMTP_USERNAME
-      - SMTP_PASSWORD
-      - SMTP_FROM_ADDRESS
-    networks:
-      - aptabase
-      - proxy
+    ports:
+      - 8000:80
+    env_file:
+      - .env
+    # environment:
+    #   - WAIT_HOSTS=aptabase_db:5432;aptabase_events_db:8123
+    #   BASE_URL: http://localhost:8000 # replace with your ip or domain, including port if needed
+    #   AUTH_SECRET: c4rI4x8kz5DgKJ1is5Eiu9bNncSQ6ROD # get a strong secret from https://randomkeygen.com/
+    #   DATABASE_URL: Server=aptabase_db;Port=5432;User Id=aptabase;Password=sTr0NGp4ssw0rd;Database=aptabase
+    #   CLICKHOUSE_URL: Host=aptabase_events_db;Port=8123;Username=aptabase;Password=sTr0NGp4ssw0rd
 
 volumes:
   db-data:
     driver: local
   events-db-data:
     driver: local
-
-networks:
-  aptabase:
-  proxy:
-    external: true
