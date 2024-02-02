@@ -42,7 +42,5 @@ services:
 volumes:
   db-data:
     driver: local
-    external: true
   events-db-data:
     driver: local
-    external: true
