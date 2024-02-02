@@ -32,7 +32,7 @@ services:
       - aptabase_events_db
       - aptabase_db
     ports:
-      - 8000:80
+      - 9073:80
     environment:
       BASE_URL: http://localhost:8000 # replace with your ip or domain, including port if needed
       AUTH_SECRET: Qz8kyeJ4ACS5iBRRTNuq7fu8w3oLYZll # get a strong secret from https://randomkeygen.com/
