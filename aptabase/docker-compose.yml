@@ -7,9 +7,9 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - db-data:/var/lib/postgresql/data
-    networks:
-      - aptabase
+      - aptabase-db-data:/var/lib/postgresql/data
+    # networks:
+    #   - aptabase
     environment:
       POSTGRES_USER: aptabase
       POSTGRES_PASSWORD: ePBcgYb3Zm9RKdm0jmcAdhBCajnPmz7j
@@ -21,9 +21,9 @@ services:
     ports:
       - 8123:8123    
     volumes:
-      - events-db-data:/var/lib/clickhouse
-    networks:
-      - aptabase
+      - aptabase-events-db-data:/var/lib/clickhouse
+    # networks:
+    #   - aptabase
     environment:
       CLICKHOUSE_USER: aptabase
       CLICKHOUSE_PASSWORD: ePBcgYb3Zm9RKdm0jmcAdhBCajnPmz7j
@@ -41,21 +41,23 @@ services:
       - aptabase_db
     ports:
       - 9073:80
-    networks:
-      - aptabase
-      - proxy
+    # networks:
+    #   - aptabase
+    #   - proxy
     environment:
-      BASE_URL: http://localhost:8000 # replace with your ip or domain, including port if needed
+      BASE_URL: https://aptabase.prntes.space # replace with your ip or domain, including port if needed
       AUTH_SECRET: Qz8kyeJ4ACS5iBRRTNuq7fu8w3oLYZll # get a strong secret from https://randomkeygen.com/
       DATABASE_URL: Server=aptabase_db;Port=5432;User Id=aptabase;Password=ePBcgYb3Zm9RKdm0jmcAdhBCajnPmz7j;Database=aptabase
       CLICKHOUSE_URL: Host=aptabase_events_db;Port=8123;Username=aptabase;Password=ePBcgYb3Zm9RKdm0jmcAdhBCajnPmz7j
 
 volumes:
-  db-data:
+  aptabase-db-data:
     driver: local
-  events-db-data:
+    external: true
+  aptabase-events-db-data:
     driver: local
-networks:
-  aptabase:
-  proxy:
-    external: true    
+    external: true
+# networks:
+#   aptabase:
+#   proxy:
+#     external: true    
