@@ -4,8 +4,12 @@ services:
     container_name: aptabase_db
     image: postgres:15-alpine
     restart: always
+    ports:
+      - 5432:5432
     volumes:
       - db-data:/var/lib/postgresql/data
+    networks:
+      - aptabase
     environment:
       POSTGRES_USER: aptabase
       POSTGRES_PASSWORD: ePBcgYb3Zm9RKdm0jmcAdhBCajnPmz7j
@@ -14,8 +18,12 @@ services:
     container_name: aptabase_events_db
     image: clickhouse/clickhouse-server:23.8.4.69-alpine
     restart: always
+    ports:
+      - 8123:8123    
     volumes:
       - events-db-data:/var/lib/clickhouse
+    networks:
+      - aptabase
     environment:
       CLICKHOUSE_USER: aptabase
       CLICKHOUSE_PASSWORD: ePBcgYb3Zm9RKdm0jmcAdhBCajnPmz7j
@@ -33,6 +41,9 @@ services:
       - aptabase_db
     ports:
       - 9073:80
+    networks:
+      - aptabase
+      - proxy
     environment:
       BASE_URL: http://localhost:8000 # replace with your ip or domain, including port if needed
       AUTH_SECRET: Qz8kyeJ4ACS5iBRRTNuq7fu8w3oLYZll # get a strong secret from https://randomkeygen.com/
@@ -44,3 +55,7 @@ volumes:
     driver: local
   events-db-data:
     driver: local
+networks:
+  aptabase:
+  proxy:
+    external: true    
