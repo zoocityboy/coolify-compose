@@ -53,10 +53,10 @@ services:
 volumes:
   aptabase-db-data:
     driver: local
-    external: true
+    # external: true
   aptabase-events-db-data:
     driver: local
-    external: true
+    # external: true
 networks:
   aptabase:
   proxy:
