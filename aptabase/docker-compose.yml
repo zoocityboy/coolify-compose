@@ -43,7 +43,6 @@ services:
       - 9073:80
     networks:
       - aptabase
-      - proxy
     environment:
       - BASE_URL=${BASE_URL}
       - AUTH_SECRET=${AUTH_SECRET}
@@ -59,5 +58,4 @@ volumes:
     # external: true
 networks:
   aptabase:
-  proxy:
-    external: true    
+    driver: bridge  
