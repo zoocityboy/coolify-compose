@@ -4,8 +4,8 @@ services:
     container_name: aptabase_db
     image: postgres:15-alpine
     restart: always
-    # ports:
-    #   - 5432:5432
+    ports:
+      - 9070:5432
     volumes:
       - aptabase-db-data:/var/lib/postgresql/data
     networks:
@@ -18,8 +18,8 @@ services:
     container_name: aptabase_events_db
     image: clickhouse/clickhouse-server:23.8.4.69-alpine
     restart: always
-    # ports:
-    #   - 8123:8123    
+    ports:
+      - 9071:8123    
     volumes:
       - aptabase-events-db-data:/var/lib/clickhouse
     networks:
@@ -46,8 +46,8 @@ services:
     environment:
       - BASE_URL=${BASE_URL}
       - AUTH_SECRET=${AUTH_SECRET}
-      - DATABASE_URL=Server=aptabase_db;Port=5432;User Id=${AUTH_USER};Password=${AUTH_PASSWORD};Database=${AUTH_USER}
-      - CLICKHOUSE_URL=Host=aptabase_events_db;Port=8123;Username=${AUTH_USER};Password=${AUTH_PASSWORD}
+      - DATABASE_URL=Server=aptabase_db;Port=9070;User Id=${AUTH_USER};Password=${AUTH_PASSWORD};Database=${AUTH_USER}
+      - CLICKHOUSE_URL=Host=aptabase_events_db;Port=9071;Username=${AUTH_USER};Password=${AUTH_PASSWORD}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}
