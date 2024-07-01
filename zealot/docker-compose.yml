@@ -1,0 +1,70 @@
+# Generated on Mon Jul  1 04:24:24 CEST 2024
+# USE SSL: letsencrypt
+version: "3.8"
+
+x-restart-policy: &restart_policy
+  restart: unless-stopped
+
+x-defaults: &defaults
+  <<: *restart_policy
+  image: ghcr.io/tryzealot/zealot:latest
+  depends_on:
+    - postgres
+  env_file: .env
+  volumes:
+    - zealot-uploads:/app/public/uploads
+    - zealot-backup:/app/public/backup
+    - ./log:/app/log
+  healthcheck:
+    test: ["CMD-SHELL", "wget -q --spider --proxy=off localhost/health || exit 1"]
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "1g"
+      max-file: "10"
+      max-buffer-size: "4m"
+      mode: "non-blocking"
+
+services:
+  postgres:
+    <<: *restart_policy
+    image: postgres:14-alpine
+    volumes:
+      - zealot-postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ze@l0t
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+  zealot:
+    <<: *defaults
+  web:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/etc/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy/etc/caddy/certs:/etc/caddy/certs:ro
+    env_file: .env
+    environment:
+      ACME_AGREE: "true"
+
+volumes:
+  zealot-uploads:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: .//zealot/uploads
+  zealot-backup:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: .//zealot/backup
+  zealot-postgres:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: .//postgres
